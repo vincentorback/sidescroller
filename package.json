@@ -1,0 +1,84 @@
+{
+  "name": "sidescroller",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "npm-run-all --parallel serve watch",
+    "build": "npm-run-all build:css build:js build:html",
+    "build:css": "postcss src/css/style.css -o dist/css/style.css",
+    "build:html": "html-minifier --remove-comments --sort-attributes --sort-class-name --collapse-whitespace --remove-redundant-attributes --process-scripts 'application/ld+json' --minify-js true --output-dir dist --input-dir src/html --file-ext html",
+    "build:js": "browserify -e src/js/main.js | uglifyjs > dist/js/main.js",
+    "move:images": "copyfiles -f src/images/* dist/images",
+    "serve": "ws -d dist -p 3000",
+    "watch": "npm-run-all --parallel watch:css watch:html watch:images watch:js",
+    "watch:css": "eye --*glob=src/css/*.css npm-run-all build:css",
+    "watch:html": "eye --*glob=src/html/*.html npm-run-all build:html",
+    "watch:images": "eye --*glob=src/images/* npm-run-all move:images",
+    "watch:js": "eye --*glob=src/js/**/*.js npm-run-all build:js"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
+    "autoprefixer": "^9.7.3",
+    "babelify": "^10.0.0",
+    "browserify": "^16.5.0",
+    "copyfiles": "^2.1.1",
+    "eye": "^0.0.3",
+    "html-minifier": "^4.0.0",
+    "local-web-server": "^3.0.7",
+    "npm-run-all": "^4.1.5",
+    "postcss-calc": "^7.0.1",
+    "postcss-cli": "^6.1.3",
+    "postcss-csso": "^4.0.0",
+    "postcss-custom-properties": "^9.0.2",
+    "postcss-import": "^12.0.1",
+    "purgecss": "^1.4.2",
+    "standard": "^14.3.1",
+    "stringify": "^5.2.0",
+    "stylelint": "^12.0.1",
+    "uglify-es": "^3.3.10",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0"
+  },
+  "dependencies": {
+    "pixi.js": "^5.2.0"
+  },
+  "browserslist": [
+    "> 5% in SE"
+  ],
+  "postcss": {
+    "plugins": {
+      "postcss-import": {},
+      "postcss-custom-properties": {
+        "preserve": true
+      },
+      "autoprefixer": {
+        "grid": true
+      },
+      "postcss-calc": {
+        "preserve": false
+      },
+      "postcss-csso": {}
+    }
+  },
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            [
+              "@babel/preset-env",
+              {
+                "targets": {
+                  "browsers": [
+                    "last 2 version"
+                  ]
+                }
+              }
+            ]
+          ]
+        }
+      ]
+    ]
+  }
+}
