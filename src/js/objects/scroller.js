@@ -1,5 +1,6 @@
 'use strict'
 
+import MapBuilder from './mapBuilder'
 import MidBackground from './midBackground'
 import FarBackground from './farBackground'
 import Walls from './walls'
@@ -10,10 +11,11 @@ class Scroller {
     this.midBackground = new MidBackground(game)
     this.front = new Walls(game)
 
-    game.app.stage.addChild(this.farBackground)
-    game.app.stage.addChild(this.midBackground)
-    console.log(this.front)
-    game.app.stage.addChild(this.front.container)
+    game.stage.addChild(this.farBackground)
+    game.stage.addChild(this.midBackground)
+    game.stage.addChild(this.front.container)
+
+    this.mapBuilder = new MapBuilder(this.front)
 
     this.viewportX = 0
   }
@@ -23,6 +25,7 @@ class Scroller {
 
     this.farBackground.setViewportX(viewportX)
     this.midBackground.setViewportX(viewportX)
+    this.front.setViewportX(viewportX)
   }
 
   getViewportX () {
