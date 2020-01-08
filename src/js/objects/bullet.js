@@ -23,7 +23,7 @@ class Bullet {
 
   shoot () {
     this.sprite.alpha = .9
-    this.vx = 20
+    this.vx = 15
   }
 
   reset () {

@@ -11,7 +11,9 @@ class Hero {
 
     this.sprite = new PIXI.AnimatedSprite(this.runSprites)
     this.health = 100
+
     this.shooting = false
+    this.jumping = false
 
     this.vx = 0
     this.vy = 0
@@ -20,16 +22,25 @@ class Hero {
     this.sprite.y = 130
     this.sprite.zIndex = 2
 
-    this.sprite.animationSpeed = 0.2
+    this.sprite.animationSpeed = 0.25
     this.sprite.play()
 
-    this.bullet = new Bullet(
-      this.sprite.x + 65,
-      this.sprite.y + 30
-    )
+    this.bullet = new Bullet(this.sprite.x + 65, this.sprite.y + 30)
 
-    game.stage.addChild(this.sprite)
-    game.stage.addChild(this.bullet.sprite)
+    game.innerStage.addChild(this.sprite)
+    game.innerStage.addChild(this.bullet.sprite)
+
+    game.controller.onClick(() => {
+      if (game.state.playing) {
+        this.jump()
+      }
+    })
+
+    game.controller.onKey(' ', () => {
+      if (game.state.playing) {
+        this.shoot()
+      }
+    })
   }
 
   run () {
@@ -38,7 +49,7 @@ class Hero {
   }
 
   shoot () {
-    if (this.shooting) {
+    if (this.shooting || this.jumping) {
       return
     }
 
@@ -46,19 +57,30 @@ class Hero {
 
     this.sprite.textures = this.shootSprites
     this.sprite.play()
+
     this.bullet.shoot()
+
     this.shooting = true
 
     setTimeout(() => {
-      this.bullet.reset()
       this.shooting = false
 
-      this.sprite.textures = runSprites
-      this.sprite.play()
+      this.bullet.reset()
+
+      if (!this.jumping) {
+        this.sprite.textures = runSprites
+        this.sprite.play()
+      }
     }, 500)
   }
 
   jump () {
+    if (this.jumping) {
+      return
+    }
+
+    this.jumping = true
+
     var runSprites = this.runSprites
     var shootSprites = this.shootSprites
     var jumpTime = 600
@@ -78,6 +100,7 @@ class Hero {
       this.sprite.textures = this.shooting ? shootSprites : runSprites
       this.sprite.play()
 
+      this.jumping = false
       this.vy = 0
     }, jumpTime * 2)
   }

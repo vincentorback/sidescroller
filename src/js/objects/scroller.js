@@ -11,9 +11,9 @@ class Scroller {
     this.midBackground = new MidBackground(game)
     this.front = new Walls(game)
 
-    game.stage.addChild(this.farBackground)
-    game.stage.addChild(this.midBackground)
-    game.stage.addChild(this.front.container)
+    game.innerStage.addChild(this.farBackground)
+    game.innerStage.addChild(this.midBackground)
+    game.innerStage.addChild(this.front.container)
 
     this.mapBuilder = new MapBuilder(this.front)
 

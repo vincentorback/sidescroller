@@ -1,4 +1,5 @@
 import SliceType from './sliceType'
+import { randomBetween } from '../utilities'
 
 class MapBuilder {
   constructor (walls) {
@@ -9,17 +10,19 @@ class MapBuilder {
   createMap () {
     this.createWallSpan(3, 16, true)
     this.createGap(1)
-    this.createWallSpan(3, 7)
+    this.createWallSpan(3, randomBetween(5, 7))
     this.createGap(1)
-    this.createWallSpan(3, 8)
+    this.createWallSpan(randomBetween(2, 3), randomBetween(6, 8))
     this.createGap(1)
     // this.createSteppedWallSpan(2, 5, 11)
     // this.createGap(1)
-    this.createWallSpan(3, 7)
+    this.createWallSpan(randomBetween(2, 3), randomBetween(6, 8))
     this.createGap(1)
-    this.createWallSpan(3, 8)
+    this.createWallSpan(randomBetween(2, 3), randomBetween(6, 8))
     this.createGap(1)
-    this.createSteppedWallSpan(3, 5, 11)
+    this.createSteppedWallSpan(randomBetween(2, 3), randomBetween(4, 7), randomBetween(4, 7))
+    this.createGap(2)
+    this.createWallSpan(randomBetween(2, 3), randomBetween(6, 8))
   }
 
 

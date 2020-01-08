@@ -13,20 +13,17 @@ class Controller {
     this.container.interactive = true
     this.container.buttonMode = true
 
-    game.app.stage.addChild(this.container)
+    game.stage.addChild(this.container)
+  }
 
-    this.container.on('mousedown', () => {
-      if (game.state.paused) {
-        game.play()
-      } else {
-        game.hero.jump()
-      }
-    })
+  onClick (callback) {
+    this.container.on('mousedown', callback)
+  }
 
+  onKey (key, callback) {
     document.addEventListener('keydown', (e) => {
-      if (e.key === ' ') {
-        console.log('shoot!')
-        game.hero.shoot()
+      if (e.key === key) {
+        callback()
       }
     })
   }

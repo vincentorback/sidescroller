@@ -11,7 +11,7 @@ class MidBackground {
     sprite.position.y = 128
     sprite.tilePosition.x = 0
     sprite.tilePosition.y = -1
-    sprite.DELTA_X = 0.64
+    sprite.DELTA_X = 0.32
     sprite.viewportX = 0
 
     sprite.setViewportX = this.setViewportX.bind(sprite)

@@ -8,11 +8,13 @@
     "build:html": "html-minifier --remove-comments --sort-attributes --sort-class-name --collapse-whitespace --remove-redundant-attributes --process-scripts 'application/ld+json' --minify-js true --output-dir dist --input-dir src/html --file-ext html",
     "build:js": "browserify -e src/js/main.js | uglifyjs > dist/js/main.js",
     "move:images": "copyfiles -f src/images/* dist/images",
+    "move:audio": "copyfiles -f src/audio/* dist/audio",
     "serve": "ws -d dist -p 3000",
     "watch": "npm-run-all --parallel watch:css watch:html watch:images watch:js",
     "watch:css": "eye --*glob=src/css/*.css npm-run-all build:css",
     "watch:html": "eye --*glob=src/html/*.html npm-run-all build:html",
     "watch:images": "eye --*glob=src/images/* npm-run-all move:images",
+    "watch:audio": "eye --*glob=src/audio/* npm-run-all move:audio",
     "watch:js": "eye --*glob=src/js/**/*.js npm-run-all build:js"
   },
   "devDependencies": {
@@ -35,6 +37,8 @@
     "uglify-es": "^3.3.10"
   },
   "dependencies": {
+    "@pixi/filter-godray": "^3.0.3",
+    "pixi-sound": "^3.0.4",
     "pixi.js": "^5.2.0"
   },
   "browserslist": [

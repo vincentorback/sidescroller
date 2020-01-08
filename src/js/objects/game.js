@@ -4,6 +4,8 @@ import * as PIXI from 'pixi.js'
 import Controller from './controller'
 import Scroller from './scroller'
 import Hero from './hero'
+import Sound from './sound'
+import Text from './text'
 
 class Game {
   constructor(options) {
@@ -15,6 +17,7 @@ class Game {
     }, {})
 
     this.state = {
+      playing: false,
       paused: false,
       health: 100,
       score: 0,
@@ -30,8 +33,12 @@ class Game {
       forceFXAA: true
     })
 
+    this.stage = this.app.stage
+
     this.controller = new Controller(this)
-    this.stage = this.controller.container
+    this.innerStage = this.controller.container
+
+    this.sound = new Sound(this)
 
     document.body.appendChild(this.app.view)
 
@@ -63,38 +70,101 @@ class Game {
   start () {
     this.scroller = new Scroller(this)
     this.hero = new Hero(this)
+    this.text = new Text(this)
 
-    var startScale = 2
+    this.text.showIntro()
+
+    var startScale = 1.9
     var endScale = 1
     var scaleIntro = false
+    var introVisible = false
+    var introTextYGoal = (this.options.height / 3)
+    var hideSolid = false
+    var startMoving = false
 
-    setTimeout(() => {
-      scaleIntro = true
-    }, 3000)
-
-    this.stage.scale.set(startScale)
+    this.innerStage.scale.set(startScale)
 
     this.app.ticker
       .add((delta) => {
-        this.hero.sprite.position.x += this.hero.vx
-        this.hero.sprite.position.y += this.hero.vy
-
-        if (this.hero.shooting) {
-          this.hero.bullet.sprite.position.x += this.hero.bullet.vx
-          this.hero.bullet.sprite.position.y += this.hero.bullet.vy
-        }
-
-        if (scaleIntro) {
-          this.stage.scale.set(this.stage.scale.x - .006)
-          if (this.stage.scale.x <= endScale) {
-            scaleIntro = false
+        if (startMoving) {
+          this.scroller.moveViewportXBy(this.state.scrollSpeed)
+          this.state.scrollSpeed += this.options.scrollAcceleration
+          if (this.state.scrollSpeed > this.options.maxScrollSpeed) {
+            this.state.scrollSpeed = this.options.maxScrollSpeed
           }
         }
 
-        this.scroller.moveViewportXBy(this.state.scrollSpeed)
-        this.state.scrollSpeed += this.options.scrollAcceleration
-        if (this.state.scrollSpeed > this.options.maxScrollSpeed) {
-          this.state.scrollSpeed = this.options.maxScrollSpeed
+        if (this.state.playing) {
+          this.hero.sprite.position.x += this.hero.vx
+          this.hero.sprite.position.y += this.hero.vy
+
+          if (this.hero.shooting) {
+            this.hero.bullet.sprite.position.x += this.hero.bullet.vx
+            this.hero.bullet.sprite.position.y += this.hero.bullet.vy
+          }
+        }
+
+        if (!introVisible) {
+          this.text.triangle.alpha = this.text.triangle.alpha + .1
+          this.text.introText.alpha = this.text.introText.alpha + .1
+          this.text.triangle.y -= 2.5
+          this.text.introText.y += 1.5
+
+          if (this.text.introText.y >= introTextYGoal) {
+            this.text.triangle.alpha = 1
+            this.text.introText.alpha = 1
+            introVisible = true
+
+            this.sound.play('success')
+
+            window.setTimeout(() => {
+              this.text.playText.alpha = 1
+
+              var playTextBlink = window.setInterval(() => {
+                this.text.playText.alpha = this.text.playText.alpha === 1 ? 0 : 1
+              }, 500)
+
+              this.controller.onClick(() => {
+                clearInterval(playTextBlink)
+                hideSolid = true
+              })
+            }, 1500)
+          }
+        }
+
+        if (hideSolid) {
+          startMoving = true
+
+          this.text.solid.alpha = this.text.solid.alpha - .01
+
+          if (this.text.introText.alpha >= 0) {
+            this.text.triangle.alpha = this.text.triangle.alpha - .15
+            this.text.introText.alpha = this.text.introText.alpha - .15
+            this.text.playText.alpha = this.text.playText.alpha - .15
+
+            this.text.triangle.y -= 1.5
+            this.text.introText.y += 1.5
+            this.text.playText.y += 1.5
+          }
+
+          // this.sound.play('play')
+
+          if (this.text.solid.alpha <= 0) {
+            window.setTimeout(() => {
+              this.text.removeIntro()
+              scaleIntro = true
+            }, 1500)
+          }
+        }
+
+        if (scaleIntro) {
+          this.innerStage.scale.set(this.innerStage.scale.x - .005)
+
+          if (this.innerStage.scale.x <= endScale) {
+            this.innerStage.scale.set(1)
+            scaleIntro = false
+            this.state.playing = true
+          }
         }
       })
   }
@@ -111,7 +181,7 @@ class Game {
       sprite.y = 128
 
       this.wallSlices.push(sprite)
-      this.stage.addChild(sprite)
+      this.innerStage.addChild(sprite)
     }
   }
 

@@ -11,7 +11,7 @@ class FarBackground {
     sprite.position.y = 0
     sprite.tilePosition.x = 0
     sprite.tilePosition.y = 0
-    sprite.DELTA_X = 0.128
+    sprite.DELTA_X = 0.064
     sprite.viewportX = 0
 
     sprite.setViewportX = this.setViewportX.bind(sprite)

@@ -1,13 +1,19 @@
 # Sidescroller
 
+## Tutorials
 https://github.com/kittykatattack/learningPixi#lines
-
 http://www.yeahbutisitflash.com/?p=6496
+https://www.youtube.com/channel/UCNmfPobOx8xXhz9I-R-djGQ
 
 
+## Filters
+https://www.youtube.com/watch?v=wIC-CqsUplw
 
-https://github.com/pixijs/pixi.js/wiki/v5-Migration-Guide
+https://www.npmjs.com/package/@pixi/filter-godray
+https://www.npmjs.com/package/@pixi/filter-motion-blur
+https://www.npmjs.com/package/@pixi/filter-pixelate
+https://www.npmjs.com/package/@pixi/filter-twist
+https://www.npmjs.com/package/@pixi/filter-glitch
 
-https://medium.com/goodboy-digital/pixijs-v5-lands-5e112d84e510
-
-https://www.html5gamedevs.com/forum/15-pixijs/
+## Audio
+https://pixijs.io/pixi-sound/examples/sprites.html
